@@ -142,10 +142,12 @@ class DashboardPage(tk.Frame):
         self.scrollbar = tk.Scrollbar(scroll_outer, orient="vertical", command=self.canvas.yview)
 
         self.main_content = tk.Frame(self.canvas, bg=BACKGROUND)
-        self.main_content.bind(
-            "<Configure>",
-            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        
+        def update_scroll_region(event=None):
+            self.canvas.configure(scrollregion=self.canvas.bbox("all")
         )
+
+        self.main_content.bind("<Configure>", update_scroll_region)
         self.canvas_window = self.canvas.create_window((0, 0), window=self.main_content, anchor="nw")
 
         self.canvas.configure(yscrollcommand=self.scrollbar.set)

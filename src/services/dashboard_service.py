@@ -14,6 +14,6 @@ class DashboardService:
         if year:
             params["year"] = year
 
-        response = requests.post(url, params=params, timeout=API_TIMEOUT * 30)
+        response = requests.post(url, params=params, timeout=API_TIMEOUT * 60)
         response.raise_for_status()
         return CollectDataSummaryDto.model_validate(response.json())

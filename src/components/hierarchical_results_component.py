@@ -39,25 +39,8 @@ class HierarchicalResultsComponent(tk.Frame):
             font=("Arial", 14, "bold")
         ).pack(side="left")
 
-        # Container rolável para acomodar a hierarquia
-        self.canvas = tk.Canvas(self, bg=BACKGROUND, highlightthickness=0)
-        self.scrollbar = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
-        self.content_frame = tk.Frame(self.canvas, bg=BACKGROUND)
-
-        self.content_frame.bind(
-            "<Configure>",
-            lambda e: self.canvas.configure(scrollregion=self.canvas.bbox("all"))
-        )
-        self.canvas_window = self.canvas.create_window((0, 0), window=self.content_frame, anchor="nw")
-
-        self.bind("<Configure>", self._on_resize)
-        self.canvas.configure(xscrollcommand=None, yscrollcommand=self.scrollbar.set)
-
-        self.canvas.pack(side="left", fill="both", expand=True)
-        self.scrollbar.pack(side="right", fill="y")
-
-    def _on_resize(self, event):
-        self.canvas.itemconfig(self.canvas_window, width=event.width - 25)
+        self.content_frame = tk.Frame(self, bg=BACKGROUND)
+        self.content_frame.pack(fill="both", expand=True)
 
     def set_data(self, data: List[SessionDriverResultsDto]):
         self._data = data
