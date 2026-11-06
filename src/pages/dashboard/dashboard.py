@@ -1,8 +1,8 @@
 import threading
 import tkinter as tk
-from tkinter import messagebox
+from tkinter import ttk, messagebox
 from typing import Optional
-from datetime import datetime, date
+from datetime import datetime, date, timedelta
 
 from tkcalendar import DateEntry
 
@@ -10,31 +10,29 @@ from components.line_chart_component import LineChartComponent
 from components.hierarchical_results_component import HierarchicalResultsComponent
 from services.dashboard_service import DashboardService
 from services.session_driver_service import SessionDriverService
-from theme import BACKGROUND, SIDEBAR, PRIMARY, SECONDARY, TEXT_PRIMARY, TEXT_SECONDARY, BUTTON_HOVER, FONT_HEADER
-
+from theme import BACKGROUND, SIDEBAR, PRIMARY, SECONDARY, TEXT_PRIMARY, TEXT_SECONDARY, FONT_HEADER
 
 class DashboardPage(tk.Frame):
     """
     Tela principal de Dashboard:
-    - Barra superior com botão de coleta e seletores visuais de data (DateEntry)
+    - Barra superior com botao de coleta, seletores de data (DateEntry) e filtro de tipo de sessao
     - Scroll geral na tela (Canvas + Scrollbar)
-    - Gráfico de linha (LineChartComponent)
+    - Grafico de linha (LineChartComponent)
     - Hierarquia de resultados (HierarchicalResultsComponent)
     """
 
     def __init__(self, parent):
         super().__init__(parent, bg=BACKGROUND)
         self._is_collecting = False
-        self._filter_applied = False
         self._create_layout()
         self.load_data()
 
     def _create_layout(self):
-        # Barra de Ações Superior (Fixa no topo)
+        # Barra de Acoes Superior (Fixa no topo)
         self.action_bar = tk.Frame(self, bg=SIDEBAR, highlightthickness=1, highlightbackground="#333333")
         self.action_bar.pack(fill="x", padx=15, pady=(10, 4))
 
-        # Título da página
+        # Titulo da pagina
         tk.Label(
             self.action_bar,
             text="Dashboard de Performance",
@@ -43,11 +41,11 @@ class DashboardPage(tk.Frame):
             font=("Arial", 14, "bold")
         ).pack(side="left", padx=12, pady=10)
 
-        # Container dos controles à direita
+        # Container dos controles a direita
         controls_frame = tk.Frame(self.action_bar, bg=SIDEBAR)
         controls_frame.pack(side="right", padx=12, pady=8)
 
-        # Configuração visual do calendário dropdown (DateEntry)
+        # Configuracao visual do calendario dropdown (DateEntry)
         cal_kwargs = {
             "date_pattern": "yyyy-mm-dd",
             "background": "#1E1E1E",
@@ -66,45 +64,33 @@ class DashboardPage(tk.Frame):
             "width": 11,
         }
 
-        # Data Inicial (DateEntry)
+        # Datas default: de = 1 mes atras, ate = hoje
+        today = date.today()
+        one_month_ago = today - timedelta(days=30)
+
+        # Data Inicial (DateEntry) - sempre habilitado
         tk.Label(controls_frame, text="De:", bg=SIDEBAR, fg=TEXT_SECONDARY, font=("Arial", 9)).pack(side="left", padx=(0, 4))
         self.date_from_entry = DateEntry(
             controls_frame,
-            year=datetime.now().year,
-            month=1,
-            day=1,
+            year=one_month_ago.year,
+            month=one_month_ago.month,
+            day=one_month_ago.day,
             **cal_kwargs
         )
         self.date_from_entry.pack(side="left", padx=(0, 10))
 
-        # Data Final (DateEntry)
-        tk.Label(controls_frame, text="Até:", bg=SIDEBAR, fg=TEXT_SECONDARY, font=("Arial", 9)).pack(side="left", padx=(0, 4))
+        # Data Final (DateEntry) - sempre habilitado
+        tk.Label(controls_frame, text="Ate:", bg=SIDEBAR, fg=TEXT_SECONDARY, font=("Arial", 9)).pack(side="left", padx=(0, 4))
         self.date_to_entry = DateEntry(
             controls_frame,
-            year=datetime.now().year,
-            month=12,
-            day=31,
+            year=today.year,
+            month=today.month,
+            day=today.day,
             **cal_kwargs
         )
-        self.date_to_entry.pack(side="left", padx=(0, 8))
+        self.date_to_entry.pack(side="left", padx=(0, 14))
 
-        # Checkbox ou botão para aplicar/limpar filtro de data
-        self.var_use_date_filter = tk.BooleanVar(value=False)
-        self.chk_use_filter = tk.Checkbutton(
-            controls_frame,
-            text="Filtrar por data",
-            variable=self.var_use_date_filter,
-            bg=SIDEBAR,
-            fg=TEXT_PRIMARY,
-            selectcolor="#1E1E1E",
-            activebackground=SIDEBAR,
-            activeforeground=TEXT_PRIMARY,
-            font=("Arial", 9),
-            command=self.load_data
-        )
-        self.chk_use_filter.pack(side="left", padx=(0, 10))
-
-        # Botão Aplicar Filtro
+        # Botao Aplicar Filtro
         self.btn_filter = tk.Button(
             controls_frame,
             text="Aplicar",
@@ -115,11 +101,11 @@ class DashboardPage(tk.Frame):
             relief="flat",
             font=("Arial", 9, "bold"),
             padx=10,
-            command=self._on_apply_filter
+            command=self.load_data
         )
         self.btn_filter.pack(side="left", padx=(0, 14))
 
-        # Botão Coletar Dados
+        # Botao Coletar Dados
         self.btn_collect = tk.Button(
             controls_frame,
             text="Coletar dados",
@@ -147,7 +133,7 @@ class DashboardPage(tk.Frame):
         self.status_label.pack(anchor="w", padx=18, pady=(0, 4))
 
         # =========================================================================
-        # CONTAINER PRINCIPAL ROLÁVEL (Canvas + Scrollbar)
+        # CONTAINER PRINCIPAL ROLAVEL (Canvas + Scrollbar)
         # =========================================================================
         scroll_outer = tk.Frame(self, bg=BACKGROUND)
         scroll_outer.pack(fill="both", expand=True, padx=15, pady=(0, 10))
@@ -166,13 +152,13 @@ class DashboardPage(tk.Frame):
         self.canvas.pack(side="left", fill="both", expand=True)
         self.scrollbar.pack(side="right", fill="y")
 
-        # Ajusta a largura do conteúdo interno automaticamente ao redimensionar a janela
+        # Ajusta a largura do conteudo interno automaticamente ao redimensionar a janela
         scroll_outer.bind("<Configure>", self._on_frame_resize)
 
         # Suporte a Scroll do Mouse (Wheel)
         self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
 
-        # 1. Gráfico de linha no topo
+        # 1. Grafico de linha no topo
         self.line_chart = LineChartComponent(self.main_content)
         self.line_chart.pack(fill="x", pady=(0, 16))
 
@@ -187,44 +173,38 @@ class DashboardPage(tk.Frame):
         if self.canvas.winfo_exists():
             self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
 
-    def _on_apply_filter(self):
-        self.var_use_date_filter.set(True)
-        self.load_data()
-
     def load_data(self):
-        """Carrega os dados dos dois endpoints aplicando o seletor de datas se ativado."""
-        date_from = None
-        date_to = None
-
-        if self.var_use_date_filter.get():
-            try:
-                date_from_val: date = self.date_from_entry.get_date()
-                date_to_val: date = self.date_to_entry.get_date()
-                date_from = date_from_val.strftime("%Y-%m-%d")
-                date_to = date_to_val.strftime("%Y-%m-%d")
-            except Exception:
-                date_from = None
-                date_to = None
+        """Carrega os dados dos dois endpoints aplicando os filtros de data e tipo de sessao."""
+        try:
+            date_from_val: date = self.date_from_entry.get_date()
+            date_to_val: date = self.date_to_entry.get_date()
+            date_from = date_from_val.strftime("%Y-%m-%d")
+            date_to = date_to_val.strftime("%Y-%m-%d")
+        except Exception:
+            date_from = None
+            date_to = None
 
         try:
-            # 1. Carrega dados do gráfico de linhas (apenas pilotos ativos no dashboard)
+            # 1. Carrega dados do grafico de linhas (apenas pilotos ativos no dashboard)
             chart_data = SessionDriverService.get_drivers_for_line_chart(
                 date_from=date_from,
-                date_to=date_to
+                date_to=date_to,
+                session_type=""
             )
             self.line_chart.set_data(chart_data)
 
-            # 2. Carrega hierarquia de resultados respeitando o intervalo de datas
+            # 2. Carrega hierarquia de resultados respeitando o intervalo de datas e tipo de sessao
             results_data = SessionDriverService.get_all_results(
                 date_from=date_from,
-                date_to=date_to
+                date_to=date_to,
+                session_type=""
             )
             self.hierarchical_results.set_data(results_data)
 
         except Exception as e:
             messagebox.showerror(
                 "Erro ao Carregar Dados",
-                f"Não foi possível obter os dados do backend:\n{str(e)}"
+                f"Nao foi possivel obter os dados do backend:\n{str(e)}"
             )
 
     def _on_collect_clicked(self):
@@ -233,7 +213,7 @@ class DashboardPage(tk.Frame):
 
         self._is_collecting = True
         self.btn_collect.config(state="disabled", text="Coletando...")
-        self.status_label.config(text="Acessando a API OpenF1 e sincronizando sessões e pilotos...")
+        self.status_label.config(text="Acessando a API OpenF1 e sincronizando sessoes e pilotos...")
 
         thread = threading.Thread(target=self._run_collection, daemon=True)
         thread.start()
@@ -248,21 +228,21 @@ class DashboardPage(tk.Frame):
     def _on_collection_success(self, summary):
         self._is_collecting = False
         self.btn_collect.config(state="normal", text="Coletar dados")
-        self.status_label.config(text="Coleta concluída com sucesso!")
+        self.status_label.config(text="Coleta concluida com sucesso!")
 
         info_msg = (
-            f"Coleta concluída!\n\n"
-            f"• Sessões encontradas: {summary.sessions_found}\n"
-            f"• Novas sessões: {summary.sessions_new}\n"
-            f"• Sessões atualizadas: {summary.sessions_updated}\n"
+            f"Coleta concluida!\n\n"
+            f"• Sessoes encontradas: {summary.sessions_found}\n"
+            f"• Novas sessoes: {summary.sessions_new}\n"
+            f"• Sessoes atualizadas: {summary.sessions_updated}\n"
             f"• Pilotos identificados: {summary.drivers_found}\n"
-            f"• Participações registradas: {summary.participations_created}\n"
-            f"• Participações atualizadas: {summary.participations_updated}\n"
+            f"• Participacoes registradas: {summary.participations_created}\n"
+            f"• Participacoes atualizadas: {summary.participations_updated}\n"
             f"• Erros: {summary.errors_count}"
         )
         messagebox.showinfo("Sucesso na Coleta", info_msg)
 
-        # Recarrega os componentes após nova coleta
+        # Recarrega os componentes apos nova coleta
         self.load_data()
 
     def _on_collection_error(self, error_msg: str):

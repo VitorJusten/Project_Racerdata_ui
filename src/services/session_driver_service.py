@@ -7,7 +7,7 @@ from dto.session_driver_results_dto import SessionDriverResultsDto
 
 
 class SessionDriverService:
-    """Serviço para consulta de participações e resultados de pilotos em sessões."""
+    """Servico para consulta de participacoes e resultados de pilotos em sessoes."""
 
     BASE_PATH = f"{API_BASE_URL}/session-drivers"
 
@@ -32,7 +32,8 @@ class SessionDriverService:
     def get_drivers_for_line_chart(
         cls,
         date_from: Optional[str] = None,
-        date_to: Optional[str] = None
+        date_to: Optional[str] = None,
+        session_type: Optional[str] = None
     ) -> List[SessionDriverLineChartDto]:
         url = f"{cls.BASE_PATH}/line-chart"
         params = {}
@@ -40,6 +41,8 @@ class SessionDriverService:
             params["date_from"] = date_from
         if date_to:
             params["date_to"] = date_to
+        if session_type:
+            params["session_type"] = session_type
 
         response = requests.get(url, params=params, timeout=API_TIMEOUT)
         response.raise_for_status()
@@ -50,7 +53,8 @@ class SessionDriverService:
         cls,
         year: Optional[int] = None,
         date_from: Optional[str] = None,
-        date_to: Optional[str] = None
+        date_to: Optional[str] = None,
+        session_type: Optional[str] = None
     ) -> List[SessionDriverResultsDto]:
         url = f"{cls.BASE_PATH}/results"
         params = {}
@@ -60,6 +64,8 @@ class SessionDriverService:
             params["date_from"] = date_from
         if date_to:
             params["date_to"] = date_to
+        if session_type:
+            params["session_type"] = session_type
 
         response = requests.get(url, params=params, timeout=API_TIMEOUT)
         response.raise_for_status()
