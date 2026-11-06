@@ -166,7 +166,7 @@ class DriverListPage(tk.Frame):
             self._drivers = DashboardDriverService.get_all(filter_text=filter_text)
             self._render_rows()
         except Exception as e:
-            messagebox.showerror("Erro ao carregar", f"Não foi possível obter os pilotos:\n{e}")
+            messagebox.showerror("Erro ao carregar", f"Não foi possível obter os pilotos:\n{e.response.json().get("detail", str(e))}")
 
     def _render_rows(self):
         for item in self.tree.get_children():
@@ -215,7 +215,7 @@ class DriverListPage(tk.Frame):
             DashboardDriverService.change_status(driver.id, new_status)
             self.load_drivers()
         except Exception as e:
-            messagebox.showerror("Erro ao alterar status", f"Falha na requisição:\n{e}")
+            messagebox.showerror("Erro ao alterar status", f"Falha na requisição:\n{e.response.json().get("detail", str(e))}")
 
     def _on_delete_clicked(self):
         driver = self._get_selected_driver()
@@ -233,4 +233,4 @@ class DriverListPage(tk.Frame):
             messagebox.showinfo("Sucesso", "Piloto removido do dashboard.")
             self.load_drivers()
         except Exception as e:
-            messagebox.showerror("Erro ao apagar", f"Falha ao excluir piloto:\n{e}")
+            messagebox.showerror("Erro ao apagar", f"Falha ao excluir piloto:\n{e.response.json().get("detail", str(e))}")

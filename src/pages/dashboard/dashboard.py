@@ -204,7 +204,7 @@ class DashboardPage(tk.Frame):
         except Exception as e:
             messagebox.showerror(
                 "Erro ao Carregar Dados",
-                f"Nao foi possivel obter os dados do backend:\n{str(e)}"
+                str(e.response.json().get("detail", str(e)))
             )
 
     def _on_collect_clicked(self):

@@ -203,7 +203,7 @@ class DriverFormPage(tk.Frame):
             if not self.edit_driver and driver_names:
                 self.combo_driver.current(0)
         except Exception as e:
-            messagebox.showerror("Erro", f"Não foi possível carregar os pilotos:\n{e}")
+            messagebox.showerror("Erro", f"Não foi possível carregar os pilotos:\n{e.response.json().get("detail", str(e))}")
 
     def _on_pick_color(self):
         color = colorchooser.askcolor(initialcolor=self._selected_color, title="Selecione a cor da Tag")
@@ -247,4 +247,4 @@ class DriverFormPage(tk.Frame):
 
             self.on_save_success()
         except Exception as e:
-            messagebox.showerror("Erro ao Salvar", f"Não foi possível salvar os dados:\n{e}")
+            messagebox.showerror("Erro ao Salvar", f"Não foi possível salvar os dados:\n{e.response.json().get("detail", str(e))}")
