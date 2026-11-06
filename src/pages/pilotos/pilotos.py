@@ -1,7 +1,7 @@
-import tkinter as tk
+﻿import tkinter as tk
 from typing import Optional
 
-from dto.dashboard_driver_dto import DashboardDriverDto
+from models.dashboard_driver_dto import DashboardDriverDto
 from pages.pilotos.driver_list_page import DriverListPage
 from pages.pilotos.driver_form_page import DriverFormPage
 from theme import BACKGROUND

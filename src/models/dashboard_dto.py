@@ -1,8 +1,8 @@
-from typing import Optional, List
+﻿from typing import Optional, List
 from pydantic import BaseModel, Field
 
-from dto.session_dto import SessionDto
-from dto.session_driver_dto import SessionDriverDto
+from models.session_dto import SessionDto
+from models.session_driver_dto import SessionDriverDto
 
 
 class CollectDataSummaryDto(BaseModel):

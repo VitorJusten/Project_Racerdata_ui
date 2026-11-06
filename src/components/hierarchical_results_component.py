@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk
 from typing import List, Dict, Optional
 
-from dto.session_driver_results_dto import (
+from models.session_driver_results_dto import (
     SessionDriverResultsDto,
     SessionResultDetailDto,
     DriverPositionResultDto,

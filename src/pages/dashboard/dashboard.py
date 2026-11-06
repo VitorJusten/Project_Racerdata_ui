@@ -80,7 +80,7 @@ class DashboardPage(tk.Frame):
         self.date_from_entry.pack(side="left", padx=(0, 10))
 
         # Data Final (DateEntry) - sempre habilitado
-        tk.Label(controls_frame, text="Ate:", bg=SIDEBAR, fg=TEXT_SECONDARY, font=("Arial", 9)).pack(side="left", padx=(0, 4))
+        tk.Label(controls_frame, text="Até:", bg=SIDEBAR, fg=TEXT_SECONDARY, font=("Arial", 9)).pack(side="left", padx=(0, 4))
         self.date_to_entry = DateEntry(
             controls_frame,
             year=today.year,

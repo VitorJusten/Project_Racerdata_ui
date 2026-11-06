@@ -1,8 +1,8 @@
 from typing import List, Optional, Union
 import requests
 from api_config import API_BASE_URL, API_TIMEOUT
-from dto.dashboard_driver_dto import DashboardDriverDto
-from dto.dashboard_driver_input_dto import DashboardDriverInputDto
+from models.dashboard_driver_dto import DashboardDriverDto
+from models.dashboard_driver_input_dto import DashboardDriverInputDto
 
 
 class DashboardDriverService:

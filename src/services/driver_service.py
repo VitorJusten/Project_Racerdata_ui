@@ -1,7 +1,7 @@
-from typing import List, Optional
+﻿from typing import List, Optional
 import requests
 from api_config import API_BASE_URL, API_TIMEOUT
-from dto.driver_dto import DriverDto
+from models.driver_dto import DriverDto
 
 
 class DriverService:

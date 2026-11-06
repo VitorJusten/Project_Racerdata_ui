@@ -1,7 +1,7 @@
 from typing import Optional
 import requests
 from api_config import API_BASE_URL, API_TIMEOUT
-from dto.dashboard_dto import CollectDataSummaryDto
+from models.dashboard_dto import CollectDataSummaryDto
 
 
 class DashboardService:

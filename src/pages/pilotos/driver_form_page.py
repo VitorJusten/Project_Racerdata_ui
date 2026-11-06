@@ -2,9 +2,9 @@ import tkinter as tk
 from tkinter import ttk, messagebox, colorchooser
 from typing import Optional, Callable, List, Dict
 
-from dto.dashboard_driver_dto import DashboardDriverDto
-from dto.dashboard_driver_input_dto import DashboardDriverInputDto
-from dto.driver_dto import DriverDto
+from models.dashboard_driver_dto import DashboardDriverDto
+from models.dashboard_driver_input_dto import DashboardDriverInputDto
+from models.driver_dto import DriverDto
 from services.dashboard_driver_service import DashboardDriverService
 from services.driver_service import DriverService
 from theme import BACKGROUND, SIDEBAR, PRIMARY, SECONDARY, TEXT_PRIMARY, TEXT_SECONDARY

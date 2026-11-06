@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 from typing import List, Optional, Callable
 
-from dto.dashboard_driver_dto import DashboardDriverDto
+from models.dashboard_driver_dto import DashboardDriverDto
 from services.dashboard_driver_service import DashboardDriverService
 from theme import BACKGROUND, SIDEBAR, PRIMARY, SECONDARY, TEXT_PRIMARY, TEXT_SECONDARY
 

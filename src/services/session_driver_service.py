@@ -1,9 +1,9 @@
-from typing import List, Optional
+﻿from typing import List, Optional
 import requests
 from api_config import API_BASE_URL, API_TIMEOUT
-from dto.session_driver_dto import SessionDriverDto
-from dto.session_driver_line_chart_dto import SessionDriverLineChartDto
-from dto.session_driver_results_dto import SessionDriverResultsDto
+from models.session_driver_dto import SessionDriverDto
+from models.session_driver_line_chart_dto import SessionDriverLineChartDto
+from models.session_driver_results_dto import SessionDriverResultsDto
 
 
 class SessionDriverService:

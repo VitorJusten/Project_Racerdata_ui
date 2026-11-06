@@ -1,7 +1,7 @@
-from typing import List, Optional
+﻿from typing import List, Optional
 import requests
 from api_config import API_BASE_URL, API_TIMEOUT
-from dto.session_dto import SessionDto
+from models.session_dto import SessionDto
 
 
 class SessionService:

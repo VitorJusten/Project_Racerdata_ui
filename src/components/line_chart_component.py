@@ -7,7 +7,7 @@ matplotlib.use("TkAgg")
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 from matplotlib.figure import Figure
 
-from dto.session_driver_line_chart_dto import SessionDriverLineChartDto
+from models.session_driver_line_chart_dto import SessionDriverLineChartDto
 from theme import BACKGROUND, SIDEBAR, TEXT_PRIMARY, TEXT_SECONDARY, PRIMARY
 
 
