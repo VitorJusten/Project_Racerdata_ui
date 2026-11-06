@@ -8,7 +8,7 @@ Interface desktop desenvolvida com **Python + Tkinter**.
 
 - Python **3.11+** instalado
 - Dependências do projeto instaladas (`pip install -r requirements.txt`)
-- Backend rodando em [http://localhost:8000](http://localhost:8000)
+- Backend rodando em [http://localhost:8080](http://localhost:8080)
 
 ---
 
